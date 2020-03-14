@@ -160,17 +160,29 @@ func (w *Writer) Debug(m string) (err error) {
 // writeAndRetry takes a severity and the string to write. Any facility passed to
 // it as part of the severity Priority will be ignored.
 func (w *Writer) writeAndRetry(severity Priority, s string) (int, error) {
+	return w.writeAndRetryWithTimestamp(time.Now(), severity, s)
+}
+
+// writeAndRetryWithTimestamp differs from writeAndRetry in that it allows setting
+// the timestamp
+func (w *Writer) writeAndRetryWithTimestamp(timestamp time.Time, severity Priority, s string) (int, error) {
 	pr := (w.priority & facilityMask) | (severity & severityMask)
 
-	return w.writeAndRetryWithPriority(pr, s)
+	return w.writeAndRetryWithTimestampAndPriority(timestamp, pr, s)
 }
 
 // writeAndRetryWithPriority differs from writeAndRetry in that it allows setting
 // of both the facility and the severity.
 func (w *Writer) writeAndRetryWithPriority(p Priority, s string) (int, error) {
+	return w.writeAndRetryWithTimestampAndPriority(time.Now(), p, s)
+}
+
+// writeAndRetryWithTimestampAndPriority differs from writeAndRetryWithPriority in that it
+// allows setting the timestap
+func (w *Writer) writeAndRetryWithTimestampAndPriority(timestamp time.Time, p Priority, s string) (int, error) {
 	conn := w.getConn()
 	if conn != nil {
-		if n, err := w.write(conn, p, s); err == nil {
+		if n, err := w.write(conn, timestamp, p, s); err == nil {
 			return n, err
 		}
 	}
@@ -179,18 +191,18 @@ func (w *Writer) writeAndRetryWithPriority(p Priority, s string) (int, error) {
 	if conn, err = w.connect(); err != nil {
 		return 0, err
 	}
-	return w.write(conn, p, s)
+	return w.write(conn, timestamp, p, s)
 }
 
 // write generates and writes a syslog formatted string. It formats the
 // message based on the current Formatter and Framer.
-func (w *Writer) write(conn serverConn, p Priority, msg string) (int, error) {
+func (w *Writer) write(conn serverConn, timestamp time.Time, p Priority, msg string) (int, error) {
 	// ensure it ends in a \n
 	if !strings.HasSuffix(msg, "\n") {
 		msg += "\n"
 	}
 
-	err := conn.writeString(w.framer, w.formatter, time.Now(), p, w.hostname, w.tag, msg)
+	err := conn.writeString(w.framer, w.formatter, timestamp, p, w.hostname, w.tag, msg)
 	if err != nil {
 		return 0, err
 	}
