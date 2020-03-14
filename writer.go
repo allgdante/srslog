@@ -85,6 +85,11 @@ func (w *Writer) Write(b []byte) (int, error) {
 	return w.writeAndRetry(w.priority, string(b))
 }
 
+// WriteWithTimestamp sends a log message with a custom timestamp.
+func (w *Writer) WriteWithTimestamp(timestamp time.Time, b []byte) (int, error) {
+	return w.writeAndRetryWithTimestamp(timestamp, w.priority, string(b))
+}
+
 // WriteWithPriority sends a log message with a custom priority.
 func (w *Writer) WriteWithPriority(p Priority, b []byte) (int, error) {
 	return w.writeAndRetryWithPriority(p, string(b))
