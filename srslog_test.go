@@ -541,7 +541,7 @@ func TestLocalConn(t *testing.T) {
 
 	lc := localConn{conn: conn}
 
-	lc.writeString(nil, nil, LOG_ERR, "hostname", "tag", "content")
+	lc.writeString(nil, nil, time.Now(), LOG_ERR, "hostname", "tag", "content")
 
 	if len(messages) != 1 {
 		t.Errorf("should write one message")

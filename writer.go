@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"strings"
 	"sync"
+	"time"
 )
 
 // A Writer is a connection to a syslog server.
@@ -189,7 +190,7 @@ func (w *Writer) write(conn serverConn, p Priority, msg string) (int, error) {
 		msg += "\n"
 	}
 
-	err := conn.writeString(w.framer, w.formatter, p, w.hostname, w.tag, msg)
+	err := conn.writeString(w.framer, w.formatter, time.Now(), p, w.hostname, w.tag, msg)
 	if err != nil {
 		return 0, err
 	}
