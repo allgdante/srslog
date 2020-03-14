@@ -95,6 +95,11 @@ func (w *Writer) WriteWithPriority(p Priority, b []byte) (int, error) {
 	return w.writeAndRetryWithPriority(p, string(b))
 }
 
+// WriteWithTimestampAndPriority sends a log message with custom timestamp and priority.
+func (w *Writer) WriteWithTimestampAndPriority(timestamp time.Time, p Priority, b []byte) (int, error) {
+	return w.writeAndRetryWithTimestampAndPriority(timestamp, p, string(b))
+}
+
 // Close closes a connection to the syslog daemon.
 func (w *Writer) Close() error {
 	conn := w.getConn()
