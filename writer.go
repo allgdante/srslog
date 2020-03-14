@@ -59,9 +59,8 @@ func (w *Writer) connect() (serverConn, error) {
 		w.hostname = hostname
 
 		return conn, nil
-	} else {
-		return nil, err
 	}
+	return nil, err
 }
 
 // SetFormatter changes the formatter function for subsequent messages.

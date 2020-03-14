@@ -8,7 +8,7 @@ import (
 
 const appNameMaxLength = 48 // limit to 48 chars as per RFC5424
 
-// Formatter is a type of function that takes the consituent parts of a
+// Formatter is a type of function that takes the constituent parts of a
 // syslog message and returns a formatted string. A different Formatter is
 // defined for each different syslog protocol we support.
 type Formatter func(p Priority, hostname, tag, content string) string
