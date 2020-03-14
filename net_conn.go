@@ -2,6 +2,7 @@ package srslog
 
 import (
 	"net"
+	"time"
 )
 
 // netConn has an internal net.Conn and adheres to the serverConn interface,
@@ -19,7 +20,7 @@ func (n *netConn) writeString(framer Framer, formatter Formatter, p Priority, ho
 	if formatter == nil {
 		formatter = DefaultFormatter
 	}
-	formattedMessage := framer(formatter(p, hostname, tag, msg))
+	formattedMessage := framer(formatter(time.Now(), p, hostname, tag, msg))
 	_, err := n.conn.Write([]byte(formattedMessage))
 	return err
 }

@@ -547,7 +547,7 @@ func TestLocalConn(t *testing.T) {
 		t.Errorf("should write one message")
 	}
 
-	if messages[0] != DefaultFramer(UnixFormatter(LOG_ERR, "hostname", "tag", "content")) {
+	if messages[0] != DefaultFramer(UnixFormatter(time.Now(), LOG_ERR, "hostname", "tag", "content")) {
 		t.Errorf("should use the unix formatter")
 	}
 }

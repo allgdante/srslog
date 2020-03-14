@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"net"
+	"time"
 )
 
 // unixSyslog opens a connection to the syslog daemon running on the
@@ -44,7 +45,7 @@ func (n *localConn) writeString(framer Framer, formatter Formatter, p Priority, 
 	if formatter == nil {
 		formatter = UnixFormatter
 	}
-	_, err := n.conn.Write([]byte(framer(formatter(p, hostname, tag, msg))))
+	_, err := n.conn.Write([]byte(framer(formatter(time.Now(), p, hostname, tag, msg))))
 	return err
 }
 
